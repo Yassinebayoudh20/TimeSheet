@@ -88,6 +88,10 @@ public class EmployeServiceImpl implements IEmployeService {
 		
 	}
 
+	public Employe getEmployeeById(int id){
+		return employeRepository.findById(id).get();
+	}
+
 	public String getEmployePrenomById(int employeId) {
 		Employe employeManagedEntity = employeRepository.findById(employeId).get();
 		return employeManagedEntity.getPrenom();
