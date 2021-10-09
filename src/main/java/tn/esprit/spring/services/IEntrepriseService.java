@@ -1,6 +1,7 @@
 package tn.esprit.spring.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import tn.esprit.spring.entities.Departement;
 import tn.esprit.spring.entities.Entreprise;
@@ -14,4 +15,6 @@ public interface IEntrepriseService {
 	public void deleteEntrepriseById(int entrepriseId);
 	public void deleteDepartementById(int depId);
 	public Entreprise getEntrepriseById(int entrepriseId);
+	public List<Entreprise> getAllEntreprises();
+	public Optional<Entreprise> optionalGetEntrepriseById(int entrepriseId);
 }
