@@ -6,6 +6,8 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
@@ -18,12 +20,13 @@ import java.util.Date;
 public class EntrepriseLoggingAspect {
 
     //Logging Calculated Execution Time for all test methods
-    @Around("execution(* tn.esprit.spring.services.EntrepriseServiceImpl.*(..))")
+  /*  @Around("execution(* tn.esprit.spring.services.EntrepriseServiceImpl.*(..))")
     public Object logExecutionTimeForTestMethodsAspect(ProceedingJoinPoint joinPoint) throws Throwable{
-        log.debug("Request for {},{}() with arguments={}",
+       log.debug("Request for {},{}() with arguments={}",
                 joinPoint.getSignature().getDeclaringType(),
                 joinPoint.getSignature().getName(),
                 Arrays.toString(joinPoint.getArgs()));
+       
 
         Instant start = Instant.now();
 
@@ -34,7 +37,7 @@ public class EntrepriseLoggingAspect {
         long timeElapsed = Duration.between(start,finish).toMillis();
 
         if(timeElapsed > 3000){
-            log.info("Method {} is taking more than 3 seconds to execute",joinPoint.getSignature().getName());
+           // log.info("Method {} is taking more than 3 seconds to execute",joinPoint.getSignature().getName());
         }
 
         log.debug("Response for {},{}() with Result={}",
@@ -42,7 +45,7 @@ public class EntrepriseLoggingAspect {
                 joinPoint.getSignature().getName(),
                 obj.toString());
 
-        log.info("Time taken to execute {} was {}",
+       log.info("Time taken to execute {} was {}",
                 joinPoint.getSignature().getName(),
                 new SimpleDateFormat("mm:ss:SSS").format(new Date(timeElapsed)));
 
@@ -52,7 +55,7 @@ public class EntrepriseLoggingAspect {
     //Logs for Ajouter and Modifier Entreprise
     @Before("execution(* tn.esprit.spring.services.IEntrepriseService.*(tn.esprit.spring.entities.Entreprise))")
     public void createEntrepriseLoggerAspect(JoinPoint joinPoint){
-        log.info("Creating Object Entreprise {}",
+      log.info("Creating Object Entreprise {}",
                 Arrays.stream(joinPoint.getArgs()).findFirst().get());
     }
 
@@ -67,5 +70,5 @@ public class EntrepriseLoggingAspect {
             log.info("Object {} has been added successfully",
                     Arrays.stream(joinPoint.getArgs()).findFirst().get());
         }
-    }
+    } */
 }

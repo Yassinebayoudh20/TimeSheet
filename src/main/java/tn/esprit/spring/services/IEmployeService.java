@@ -2,6 +2,7 @@ package tn.esprit.spring.services;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import tn.esprit.spring.entities.Contrat;
 import tn.esprit.spring.entities.Employe;
@@ -32,6 +33,7 @@ public interface IEmployeService {
 	public List<Timesheet> getTimesheetsByMissionAndDate(Employe employe, Mission mission, 
 	Date dateDebut, Date dateFin);
 	public Employe getEmployeeById(int id);
+	public Optional<Employe> optionalGetEmployeById(int employee);
 	
 	
 	
