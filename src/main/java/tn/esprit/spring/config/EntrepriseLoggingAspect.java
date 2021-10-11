@@ -15,12 +15,12 @@ import java.util.Date;
 @Component
 @Aspect
 @Slf4j
-public class LoggingAspect {
+public class EntrepriseLoggingAspect {
 
     //Logging Calculated Execution Time for all test methods
     @Around("execution(* tn.esprit.spring.services.EntrepriseServiceImpl.*(..))")
     public Object logExecutionTimeForTestMethodsAspect(ProceedingJoinPoint joinPoint) throws Throwable{
-        log.info("Request for {},{}() with arguments={}",
+        log.debug("Request for {},{}() with arguments={}",
                 joinPoint.getSignature().getDeclaringType(),
                 joinPoint.getSignature().getName(),
                 Arrays.toString(joinPoint.getArgs()));
@@ -34,10 +34,10 @@ public class LoggingAspect {
         long timeElapsed = Duration.between(start,finish).toMillis();
 
         if(timeElapsed > 3000){
-            log.warn("Method {} is taking more than 3 seconds to execute",joinPoint.getSignature().getName());
+            log.info("Method {} is taking more than 3 seconds to execute",joinPoint.getSignature().getName());
         }
 
-        log.info("Response for {},{}() with Result={}",
+        log.debug("Response for {},{}() with Result={}",
                 joinPoint.getSignature().getDeclaringType(),
                 joinPoint.getSignature().getName(),
                 obj.toString());
@@ -49,8 +49,8 @@ public class LoggingAspect {
         return obj;
     }
 
-    //Logging Object to add details
-    @Before("execution(* tn.esprit.spring.services.IEntrepriseService.ajouterEntreprise(..))")
+    //Logs for Ajouter and Modifier Entreprise
+    @Before("execution(* tn.esprit.spring.services.IEntrepriseService.*(tn.esprit.spring.entities.Entreprise))")
     public void createEntrepriseLoggerAspect(JoinPoint joinPoint){
         log.info("Creating Object Entreprise {}",
                 Arrays.stream(joinPoint.getArgs()).findFirst().get());
