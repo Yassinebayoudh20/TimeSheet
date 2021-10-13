@@ -35,7 +35,7 @@ public class EnterpriseServiceImplTest {
 	public void testAjouterEntreprise() {
 		Entreprise e = new Entreprise("Esprit","Educational");
 		enterpriseRepository.ajouterEntreprise(e);
-		assertThat(e.getId()).isGreaterThan(0);
+		assertThat(e.getId()).isPositive();
 	}
 
 	@Test
