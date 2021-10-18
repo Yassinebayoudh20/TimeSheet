@@ -47,7 +47,7 @@ public class EnterpriseServiceImplTest {
 	@Test
 	public void testGetListEntreprise() {
 		ArrayList<Entreprise> entreprises = (ArrayList<Entreprise>) enterpriseRepository.getAllEntreprises();
-		assertThat(entreprises.size()).isGreaterThan(0);
+		assertThat(entreprises.size()).isPositive();
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class EnterpriseServiceImplTest {
 	public void tesDeleteEntreprise() {
 		Entreprise entreprise = enterpriseRepository.getEntrepriseById(6);
 		Optional<Entreprise> optionalEntreprise =  enterpriseRepository.optionalGetEntrepriseById(entreprise.getId());
-		assertThat(optionalEntreprise.isPresent()).isTrue();
+		assertThat(optionalEntreprise).isPresent();
 		enterpriseRepository.deleteEntrepriseById(optionalEntreprise.get().getId());
 	}
 
@@ -75,6 +75,6 @@ public class EnterpriseServiceImplTest {
 		int DepartmentId = enterpriseRepository.ajouterDepartement(d);
 		iemployeservice.affecterEmployeADepartement(EmployeIdAaffecter,DepartmentId);
 		Employe EmployeToCheck = iemployeservice.getEmployeeById(EmployeIdAaffecter);
-		assertThat(EmployeToCheck.getDepartements().contains(d));
+		assertThat(EmployeToCheck.getDepartements().contains(d)).isTrue();
 	}
 }

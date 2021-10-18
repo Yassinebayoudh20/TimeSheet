@@ -5,12 +5,14 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
+import tn.esprit.spring.entities.Entreprise;
 
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 
 @Component
 @Aspect
@@ -52,20 +54,28 @@ public class EntrepriseLoggingAspect {
     //Logs for Ajouter and Modifier Entreprise
     @Before("execution(* tn.esprit.spring.services.IEntrepriseService.*(tn.esprit.spring.entities.Entreprise))")
     public void createEntrepriseLoggerAspect(JoinPoint joinPoint){
-        log.info("Creating Object Entreprise {}",
-                Arrays.stream(joinPoint.getArgs()).findFirst().get());
+        Optional<Entreprise> entrepriseOptional = (Optional<Entreprise>) Arrays.stream(joinPoint.getArgs()).findFirst().get();
+        if(entrepriseOptional.isPresent()){
+            Entreprise entreprise = entrepriseOptional.get();
+            log.info("Creating Object Entreprise {}",entreprise);
+        }else log.error("Creating Object Not Present to create");
     }
 
     //Logging Method Result
     @AfterReturning(value = "execution(* tn.esprit.spring.services.IEntrepriseService.ajouterEntreprise(..))" , returning = "result")
-    public void FinishcreateEntrepriseLoggerAspect(JoinPoint joinPoint , Object result){
-        if(result == null || (int) result <= 0){
-            log.error("Object {} has not been added to database with result of {}",
-                    Arrays.stream(joinPoint.getArgs()).findFirst().get(),
-                    result);
-        }else {
-            log.info("Object {} has been added successfully",
-                    Arrays.stream(joinPoint.getArgs()).findFirst().get());
+    public void finishcreateEntrepriseLoggerAspect(JoinPoint joinPoint , Object result){
+        Optional<Entreprise> entrepriseOptional = (Optional<Entreprise>) Arrays.stream(joinPoint.getArgs()).findFirst().get();
+        if(entrepriseOptional.isPresent()) {
+            Entreprise entreprise = entrepriseOptional.get();
+            if(result == null || (int) result <= 0){
+                log.error("Object {} has not been added to database with result of {}",
+                        entreprise,
+                        result);
+            }else {
+                log.info("Object {} has been added successfully",
+                        Arrays.stream(joinPoint.getArgs()).findFirst().get());
+            }
         }
+
     }
 }
