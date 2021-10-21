@@ -32,7 +32,7 @@ public interface IEmployeService {
 	public List<Employe> getAllEmployes();
 	public List<Timesheet> getTimesheetsByMissionAndDate(Employe employe, Mission mission, 
 	Date dateDebut, Date dateFin);
-	public Employe getEmployeeById(int id);
+	public Optional <Employe> getEmployeeById(int id);
 	public Optional<Employe> optionalGetEmployeById(int employee);
 	
 	

@@ -70,11 +70,11 @@ public class EnterpriseServiceImplTest {
 	@Test
 	public void testAffecterEmployeeDepartement(){
 		Employe e = new Employe("Rana","Chaabane","rana@gmail.com",true, Role.CHEF_DEPARTEMENT);
-		int EmployeIdAaffecter= iemployeservice.ajouterEmploye(e);
+		int employeIdAaffecter= iemployeservice.ajouterEmploye(e);
 		Departement d = new Departement("Informatique");
-		int DepartmentId = enterpriseRepository.ajouterDepartement(d);
-		iemployeservice.affecterEmployeADepartement(EmployeIdAaffecter,DepartmentId);
-		Employe EmployeToCheck = iemployeservice.getEmployeeById(EmployeIdAaffecter);
-		assertThat(EmployeToCheck.getDepartements().contains(d));
+		int departmentId = enterpriseRepository.ajouterDepartement(d);
+		iemployeservice.affecterEmployeADepartement(employeIdAaffecter,departmentId);
+		Employe employeToCheck = iemployeservice.getEmployeeById(employeIdAaffecter);
+		assertThat(employeToCheck.getDepartements().contains(d));
 	}
 }

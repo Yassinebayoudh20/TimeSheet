@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import tn.esprit.spring.entities.Departement;
 import tn.esprit.spring.entities.Employe;
-import tn.esprit.spring.entities.Entreprise;
+
 import tn.esprit.spring.entities.Role;
 import tn.esprit.spring.services.IEmployeService;
 import tn.esprit.spring.services.IEntrepriseService;
@@ -54,29 +54,40 @@ public class EmployeServiceImplTest {
 
 	@Test
 	public void tesUpdateEmployee() {
-		Employe employe = employeRepository.getEmployeeById(1);
-		employe.setNom("yassine");
-		int employe1 = employeRepository.ajouterEmploye(employe);
-		Employe updatedEmploye = employeRepository.getEmployeeById(employe1);
-		assertThat(updatedEmploye.getNom()).isEqualTo(employe.getNom());
-	}
+		Optional<Employe> employe = employeRepository.getEmployeeById(1);
+		if (employe.isPresent())
+		{ Employe emp = employe.get();
+		emp.setNom("yassine");
+		int employe1 = employeRepository.ajouterEmploye(emp);
+		Optional<Employe> updatedEmploye = employeRepository.getEmployeeById(employe1);
+		if (updatedEmploye.isPresent())
+		{ Employe empUpdated = updatedEmploye.get();
+		assertThat(empUpdated.getNom()).isEqualTo(emp.getNom());}
+	}}
 
 	@Test
 	public void tesDeleteEmployee() {
-		Employe employe = employeRepository.getEmployeeById(1);
-		Optional<Employe> optionalEmploye =  employeRepository.optionalGetEmployeById(employe.getId());
+		Optional<Employe> employe = employeRepository.getEmployeeById(1);
+		if (employe.isPresent())
+		{ Employe emp = employe.get();
+		Optional<Employe> optionalEmploye =  employeRepository.optionalGetEmployeById(emp.getId());
+		
 		assertThat(optionalEmploye.isPresent()).isTrue();
-		employeRepository.deleteEmployeById(optionalEmploye.get().getId());
+		employeRepository.deleteEmployeById(optionalEmploye.get().getId());}
+		
+		
+		
+		
 	}
 
 	@Test
 	public void testAffecterEmployeeDepartement(){
 		Employe e = new Employe("Rana","Chaabane","rana@gmail.com",true, Role.CHEF_DEPARTEMENT);
-		int EmployeIdAaffecter= employeRepository.ajouterEmploye(e);
+		int employeIdAaffecter= employeRepository.ajouterEmploye(e);
 		Departement d = new Departement("Informatique");
-		int DepartmentId = enterpriseRepository.ajouterDepartement(d);
-		employeRepository.affecterEmployeADepartement(EmployeIdAaffecter,DepartmentId);
-		Employe EmployeToCheck = employeRepository.getEmployeeById(EmployeIdAaffecter);
-		assertThat(EmployeToCheck.getDepartements().contains(d));
+		int departmentId = enterpriseRepository.ajouterDepartement(d);
+		employeRepository.affecterEmployeADepartement(employeIdAaffecter,departmentId);
+		Employe employeTocheck = employeRepository.getEmployeeById(employeIdAaffecter);
+		assertThat(employeTocheck.getDepartements().contains(d));
 	}
 }

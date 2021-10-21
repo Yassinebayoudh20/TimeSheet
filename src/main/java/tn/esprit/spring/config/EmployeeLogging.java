@@ -1,13 +1,13 @@
 package tn.esprit.spring.config;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
+
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 
 import org.springframework.stereotype.Component;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +22,7 @@ public class EmployeeLogging {
 	Object obj = pjp.proceed();
 	long elapsedTime = System.currentTimeMillis() - start;
 	if(elapsedTime>3000)
-	{	logger.info("Method execution time: " + elapsedTime + " milliseconds.");
+	{	logger.info("Method execution time: %1$s milliseconds. " ,elapsedTime);
 	}
 	
 	return obj;
