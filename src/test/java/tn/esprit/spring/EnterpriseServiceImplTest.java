@@ -1,72 +1,84 @@
 package tn.esprit.spring;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
-import java.util.Optional;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import tn.esprit.spring.entities.Departement;
-import tn.esprit.spring.entities.Employe;
 import tn.esprit.spring.entities.Entreprise;
-import tn.esprit.spring.entities.Role;
-import tn.esprit.spring.services.IEmployeService;
 import tn.esprit.spring.services.IEntrepriseService;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Import(AnnotationAwareAspectJAutoProxyCreator.class)
+@Slf4j
 public class EnterpriseServiceImplTest {
 	
-	@Autowired
+	@MockBean
 	IEntrepriseService enterpriseRepository;
 
 	@Autowired
-	IEmployeService iemployeservice;
-
+	IEntrepriseService iEntrepriseService;
+	
 	@Test
-	public void testAjouterEntreprise() {
-		Entreprise e = new Entreprise("Esprit","Educational");
-		enterpriseRepository.ajouterEntreprise(e);
-		assertThat(e.getId()).isGreaterThan(0);
+	public void getAllEntreprisesListTest(){
+		when(enterpriseRepository.getAllEntreprises()).thenReturn(Stream
+				.of(new Entreprise("Esprit","RaisonSocial1"),
+					new Entreprise("DECADE","RaisonSocial2")).collect(Collectors.toList()));
+		assertThat(iEntrepriseService.getAllEntreprises()).isNot(null);
+		assertThat(iEntrepriseService.getAllEntreprises().size()).isEqualTo(2);
 	}
 
 	@Test
-	public void testFindEntrepriseById() {
-		Entreprise entreprise = enterpriseRepository.getEntrepriseById(25);
-		assertThat(entreprise.getId()).isEqualTo(25);
+	public void saveEntrepriseTest(){
+		Entreprise e = new Entreprise("Entrepiser1","ReasonSocial1");
+		when(enterpriseRepository.ajouterEntreprise(e)).thenReturn(e.getId());
+		assertThat(e.getId()).isEqualTo(enterpriseRepository.ajouterEntreprise(e));
 	}
 
 	@Test
-	public void testGetListEntreprise() {
-		ArrayList<Entreprise> entreprises = (ArrayList<Entreprise>) enterpriseRepository.getAllEntreprises();
-		assertThat(entreprises.size()).isGreaterThan(0);
+	public void getEntrepriseByIsTest(){
+		Entreprise entrepriseMock = new Entreprise("Entrepiser1","ReasonSocial1");
+		entrepriseMock.setId(1);
+		when(enterpriseRepository.getEntrepriseById(1)).thenReturn(entrepriseMock);
+		Entreprise e =enterpriseRepository.getEntrepriseById(1);
+		assertThat(1).isEqualTo(e.getId());
 	}
 
 	@Test
-	public void tesUpdateEntreprise() {
-		Entreprise entreprise = enterpriseRepository.getEntrepriseById(6);
-		entreprise.setName("Esprit2");
-		int entrepriseId = enterpriseRepository.ajouterEntreprise(entreprise);
-		Entreprise updatedEntreprise = enterpriseRepository.getEntrepriseById(entrepriseId);
-		assertThat(updatedEntreprise.getName()).isEqualTo(entreprise.getName());
+	public void deleteEntrepriseTest(){
+		Entreprise entrepriseMock = new Entreprise("Entrepiser1","ReasonSocial1");
+		entrepriseMock.setId(1);
+		iEntrepriseService.deleteEntrepriseById(1);
+		verify(enterpriseRepository,times(1)).deleteEntrepriseById(1);
 	}
 
 	@Test
-	public void tesDeleteEntreprise() {
-		Entreprise entreprise = enterpriseRepository.getEntrepriseById(6);
-		Optional<Entreprise> optionalEntreprise =  enterpriseRepository.optionalGetEntrepriseById(entreprise.getId());
-		assertThat(optionalEntreprise.isPresent()).isTrue();
-		enterpriseRepository.deleteEntrepriseById(optionalEntreprise.get().getId());
+	public void updateEntrepriseTest(){
+		Entreprise entrepriseMock = new Entreprise("Entrepiser1","ReasonSocial1");
+		entrepriseMock.setId(1);
+		when(enterpriseRepository.getEntrepriseById(1)).thenReturn(entrepriseMock);
+		when(enterpriseRepository.ajouterEntreprise(entrepriseMock)).thenReturn(entrepriseMock.getId());
+		//if already exists it will update it
+		entrepriseMock.setName("Entreprise2");
+		iEntrepriseService.ajouterEntreprise(entrepriseMock);
+		verify(enterpriseRepository,times(1)).ajouterEntreprise(entrepriseMock);
+		assertThat(enterpriseRepository.getEntrepriseById(1).getName()).matches("Entreprise2");
 	}
 
+/*
 	@Test
 	public void testAffecterEmployeeDepartement(){
 		Employe e = new Employe("Rana","Chaabane","rana@gmail.com",true, Role.CHEF_DEPARTEMENT);
@@ -76,5 +88,5 @@ public class EnterpriseServiceImplTest {
 		iemployeservice.affecterEmployeADepartement(EmployeIdAaffecter,DepartmentId);
 		Employe EmployeToCheck = iemployeservice.getEmployeeById(EmployeIdAaffecter);
 		assertThat(EmployeToCheck.getDepartements().contains(d));
-	}
+	}*/
 }
