@@ -1,0 +1,18 @@
+version: "3"
+services:
+  timesheet-container:
+    image: yassinebayoudh/timesheet-devops:latest
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/timeSheetDevOps?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false
+    depends_on:
+      - mysqldb
+
+  mysqldb:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=timeSheetDevOps
