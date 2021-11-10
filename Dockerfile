@@ -1,5 +1,5 @@
-FROM tomcat:8.5-alpine
-VOLUME /tmp
-RUN rm -rf /usr/local/tomcat/webapps/*
-COPY /target/Timesheet-spring-boot-core-data-jpa-mvc-REST-1-0.0.1-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
-CMD ["catalina.sh","run"]
+FROM maven:3.8.2-jdk-8
+WORKDIR /spring-boot-data-jpa
+COPY . .
+RUN mvn clean install
+CMD mvn spring-boot:run
